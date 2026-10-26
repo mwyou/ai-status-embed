@@ -69,6 +69,38 @@ docker compose up -d --force-recreate
 
 The compose file binds the container to `127.0.0.1:8099`. Put an existing reverse proxy in front of it if the service must be exposed externally. Keep the proxy's frame policy compatible with the `EMBED_ORIGINS` setting.
 
+### Automatic Docker Hub publishing
+
+`.github/workflows/docker-publish.yml` builds and publishes the image from GitHub Actions on pushes to `main`, version tags such as `v1.6.10`, or a manual workflow run. It publishes these tags:
+
+- `docker.io/<Docker Hub username>/ai-status-embed:latest` for `main`
+- `docker.io/<Docker Hub username>/ai-status-embed:<version>` for `v*.*.*` tags
+- `docker.io/<Docker Hub username>/ai-status-embed:sha-<commit>` for every run
+
+Before using the workflow, add these repository settings on GitHub:
+
+1. Repository variable `DOCKERHUB_USERNAME` — your Docker Hub username.
+2. Repository secret `DOCKERHUB_TOKEN` — a Docker Hub access token with permission to push this repository.
+
+The workflow currently targets `linux/amd64`, matching the usual x86 server deployment. After the first successful publish, the server can use the published image instead of building locally:
+
+```yaml
+services:
+  ai-status-embed:
+    image: docker.io/<your-dockerhub-username>/ai-status-embed:latest
+    pull_policy: always
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8099:8099"
+```
+
+Then update the server with:
+
+```bash
+docker compose pull
+docker compose up -d --force-recreate
+```
+
 ## Project layout
 
 - `server.mjs` — HTTP server, fixed upstream routes, caching, security headers, and API normalization
