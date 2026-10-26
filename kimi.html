@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="no-referrer">
+<title>Kimi Status | Official Status Data</title>
+<style>
+:root{color-scheme:light;--bg:#fff;--text:#111827;--muted:#89939f;--line:#edf0f2;--good:#20c997;--good-soft:#dbf8f0;--yellow:#f5c400;--orange:#f5a033;--red:#ee6b62;--neutral:#cbd0d5;--panel:#fff;--button:#28282c}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#15171c;--text:#f1f5f9;--muted:#a3adba;--line:#313741;--good-soft:#163b32;--panel:#1b1f25;--button:#353b45}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{font-size:clamp(1rem,calc(.875rem + .3vw),1.1875rem);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Segoe UI',Helvetica,sans-serif}
+body{font-size:1rem;line-height:1.5}
+h1,h2,h3,p{margin:0}a{color:inherit;text-decoration:none}a:hover{text-decoration:underline}button,a{font:inherit}button{cursor:pointer}svg{vertical-align:middle}
+.page{width:100%;max-width:48rem;margin:auto;padding:1.5rem clamp(1rem,2.5vw,2rem)}
+.header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem}
+.brand-heading{display:flex;align-items:center;gap:.8rem;min-width:0}
+.brand-copy{min-width:0}
+.brand-mark{display:grid;place-items:center;width:3rem;height:3rem;flex:none;border:1px solid var(--line);border-radius:.85rem;background:var(--panel);color:var(--text)}
+.brand-mark svg{display:block;width:1.85rem;height:1.85rem;flex:none}
+.brand-mark svg[data-brand="deepseek"]{color:#4176e6}
+:root[data-theme="dark"] .brand-mark svg[data-brand="deepseek"]{color:#fff}
+h1{font-size:2rem;letter-spacing:-.06rem;font-weight:650;line-height:1.2}
+.official-label{font-size:.8125rem;color:var(--muted);margin-top:.25rem}
+.header-actions{display:flex;align-items:center;gap:.5rem;max-width:100%}
+.subscribe{color:#fff;background:var(--button);border:1px solid var(--button);padding:.5rem .75rem;border-radius:6px;font-size:.875rem;white-space:nowrap}
+.subscribe:hover{opacity:.88;text-decoration:none}
+.refresh{display:grid;place-items:center;width:2.25rem;height:2.25rem;padding:.5rem;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--muted)}
+.refresh:hover{color:var(--text)}.refresh:disabled{opacity:.5;cursor:wait}
+.refresh svg,.history-link svg,.period-nav svg{width:1rem;height:1rem;fill:none;stroke:currentColor;stroke-width:1.8}
+.banner{border:1px solid var(--good);border-radius:8px;overflow:hidden;margin-bottom:1.5rem;background:var(--panel)}
+.banner-head{display:flex;gap:.5rem;align-items:center;padding:1rem;background:var(--good-soft);font-size:1.0625rem;font-weight:500}
+.banner-body{padding:1rem;font-size:1rem;overflow-wrap:anywhere}
+.banner.warn{border-color:var(--yellow)}.banner.warn .banner-head{background:color-mix(in srgb,var(--yellow) 10%,var(--panel))}
+.banner.bad{border-color:var(--red)}.banner.bad .banner-head{background:color-mix(in srgb,var(--red) 10%,var(--panel))}
+.banner.unknown{border-color:var(--line)}.banner.unknown .banner-head{background:var(--panel)}
+.status-icon{width:1.125rem;height:1.125rem;flex:none;color:var(--good)}
+.status-icon.warn{color:var(--yellow)}.status-icon.bad{color:var(--red)}.status-icon.unknown{color:var(--neutral)}
+.banner.incident .banner-head{align-items:flex-start;padding:1rem 1rem .35rem;background:transparent;font-size:1rem}
+.incident .status-icon{margin-top:.18rem}
+.incident h3{min-width:0;font-size:1rem;font-weight:500;overflow-wrap:anywhere}
+.incident-body{padding:0 1rem 1rem 2.625rem}
+.incident-description{font-size:.9375rem;white-space:pre-wrap;overflow-wrap:anywhere}
+.incident-meta{font-size:.875rem;color:var(--muted);margin-top:.5rem;overflow-wrap:anywhere}
+.notice{font-size:.875rem;color:var(--text);background:color-mix(in srgb,var(--yellow) 10%,var(--bg));border:1px solid var(--line);border-radius:6px;padding:.75rem;margin-bottom:1rem;overflow-wrap:anywhere}
+.system{background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 1px 3px rgba(20,25,30,.055);overflow:hidden}
+.system-head{display:flex;align-items:center;flex-wrap:wrap;gap:.65rem 1.25rem;padding:1rem;border-bottom:1px solid var(--line)}
+h2{font-size:1.0625rem;font-weight:500}
+.period{font-size:.875rem;color:var(--muted)}
+.period-nav{display:inline-flex;align-items:center;gap:.4rem;min-width:0}
+.period-nav a,.period-next{display:grid;place-items:center;width:1.25rem;height:1.5rem;color:var(--muted)}
+.period-nav a:hover{color:var(--text);text-decoration:none}.period-next{opacity:.35}
+.group-row{padding:.85rem 1rem;border-bottom:1px solid var(--line)}.group-row:last-child{border-bottom:0}
+.row-head{display:flex;align-items:center;gap:.5rem;min-width:0;list-style:none;padding:.0625rem 0 .45rem}
+summary.row-head{cursor:pointer}.row-head::-webkit-details-marker{display:none}
+.name{min-width:0;font-size:1rem;font-weight:500;overflow-wrap:anywhere}
+.component-count{font-size:.8125rem;color:var(--muted);margin-left:.25rem;white-space:nowrap}
+.component-count:after{content:'›';font-size:1.125rem;padding-left:.35rem;display:inline-block}
+details[open]>.row-head .component-count:after{transform:rotate(90deg)}
+.uptime{margin-left:auto;color:var(--muted);font-size:.875rem;white-space:nowrap}
+.bars{display:flex;gap:2px;width:100%;height:1rem;margin:.125rem 0 .25rem}
+.bar{flex:1;min-width:0;background:var(--neutral);border-radius:1px;transition:opacity .15s}
+.bar:hover,.bar:focus{outline:1px solid var(--muted);outline-offset:1px}
+.bar.operational{background:var(--good)}.bar.degraded_performance{background:var(--yellow)}.bar.partial_outage{background:var(--orange)}.bar.major_outage{background:var(--red)}.bar.under_maintenance{background:var(--blue,#60a5fa)}
+/* Official status palettes; shared layout does not recolor published daily fills. */
+body[data-provider="openai"]{--good:#24c19a;--good-soft:#d8f8f0;--yellow:#fbbf24;--orange:#f5785c;--red:#f87171;--blue:#3c82f6;--history-empty:#f7f7f8;--history-empty-hover:#e4e4e7;--good-hover:#1fa382;--yellow-hover:#f59e0b;--orange-hover:#f25533;--red-hover:#ef4444;--blue-hover:#2463eb}
+:root[data-theme="dark"] body[data-provider="openai"]{--good:#1fa382;--good-soft:#0e493a;--yellow:#f59e0b;--orange:#f25533;--red:#ef4444;--blue:#2463eb;--history-empty:#29292f;--history-empty-hover:#39393f;--good-hover:#187f65;--yellow-hover:#d97706;--orange-hover:#dd340e;--red-hover:#dc2625;--blue-hover:#1c4ed8}
+body[data-provider="claude"]{--good:#76ad2a;--yellow:#faa72a;--orange:#e86235;--red:#e04343;--blue:#2c84db;--history-empty:#b3bac5}
+body[data-provider="deepseek"]{--good:#22c55e;--yellow:#eab308;--orange:#f97316;--red:#ef4444;--blue:#3b82f6;--history-empty:hsl(0 0% 45.1% / .15)}
+:root[data-theme="dark"] body[data-provider="deepseek"]{--history-empty:hsl(0 0% 63.9% / .15)}
+body[data-provider="kimi"]{--good:#1e8542;--yellow:#f1c40f;--orange:#b35e14;--red:#de2f1b;--blue:#207ab6;--history-empty:#b3bac5}
+.bar.unknown,.bar.official_history{background:var(--history-empty,var(--neutral))}
+body[data-provider="openai"] .bar{--bar-hover:var(--history-empty-hover)}
+body[data-provider="openai"] .bar.operational{--bar-hover:var(--good-hover)}
+body[data-provider="openai"] .bar.degraded_performance{--bar-hover:var(--yellow-hover)}
+body[data-provider="openai"] .bar.partial_outage{--bar-hover:var(--orange-hover)}
+body[data-provider="openai"] .bar.major_outage{--bar-hover:var(--red-hover)}
+body[data-provider="openai"] .bar.under_maintenance{--bar-hover:var(--blue-hover)}
+body[data-provider="openai"] .bar:hover,body[data-provider="openai"] .bar:focus-visible{background:var(--bar-hover)!important}
+body[data-provider="claude"] .bar:hover,body[data-provider="claude"] .bar:focus-visible,body[data-provider="kimi"] .bar:hover,body[data-provider="kimi"] .bar:focus-visible{background:#5e6c84!important}
+.status-icon[data-state="partial_outage"]{color:var(--orange)}.status-icon[data-state="under_maintenance"]{color:var(--blue,#60a5fa)}
+.banner.bad:has(.status-icon[data-state="partial_outage"]){border-color:var(--orange)}.banner.warn:has(.status-icon[data-state="under_maintenance"]){border-color:var(--blue,#60a5fa)}
+.banner.bad:not(.incident):has(.status-icon[data-state="partial_outage"]) .banner-head{background:color-mix(in srgb,var(--orange) 10%,var(--panel))}.banner.warn:not(.incident):has(.status-icon[data-state="under_maintenance"]) .banner-head{background:color-mix(in srgb,var(--blue,#60a5fa) 10%,var(--panel))}
+.children{margin-top:.75rem;padding-left:1.5rem;border-top:1px solid var(--line)}
+.child-row{padding-top:.75rem;margin-bottom:.5rem}
+.history-missing{padding:.5rem 0;color:var(--muted);font-size:.875rem}
+.timeline-note{padding:.75rem 1rem 0;color:var(--muted);font-size:.8125rem;overflow-wrap:anywhere}
+.incident-track{display:grid;grid-template-columns:repeat(90,minmax(0,1fr));gap:2px;margin:.35rem 0 .4rem}
+.incident-day{min-width:0;width:100%;height:1.5rem;padding:0;border:0;border-radius:.25rem;background:#1abd74;color:var(--text)}
+.incident-day.moderate{background:#ffb95c}.incident-day.major{background:#ff2a6a}
+.incident-day:hover,.incident-day:focus-visible{outline:2px solid var(--text);outline-offset:1px}
+.timeline-axis{display:flex;justify-content:space-between;gap:.5rem;color:var(--muted);font-size:.6875rem}
+.day-detail{font-size:.75rem;color:var(--muted);margin-top:.35rem;white-space:pre-wrap;overflow-wrap:anywhere}
+.timeline-legend{display:flex;flex-wrap:wrap;gap:.5rem 1rem;padding:.75rem 1rem;border-top:1px solid var(--line);color:var(--muted);font-size:.75rem}
+.legend-item{display:inline-flex;align-items:center;gap:.4rem}.legend-swatch{width:.45rem;height:.8rem;flex:none;border:1px solid #1abd74;background:#1abd74}
+.legend-swatch.moderate{border-color:#ffb95c;background:#ffb95c}.legend-swatch.major{border-color:#ff2a6a;background:#ff2a6a}
+@media(max-width:560px){.incident-track{gap:1px}.incident-day{border-radius:1px}.brand-mark{width:2.75rem;height:2.75rem}.brand-mark svg{width:1.7rem;height:1.7rem}}
+.metrics-note{font-size:.875rem;color:var(--muted);margin-top:1rem;overflow-wrap:anywhere}
+#recent{margin-top:1.5rem}
+#recent h2{margin-bottom:.75rem}
+.recent-note{font-size:.8125rem;color:var(--muted);margin:0 0 .75rem;overflow-wrap:anywhere}
+.banner.incident.resolved{border-color:var(--line)}
+.history-action{text-align:center;margin-top:1.5rem}
+.history-link{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--line);border-radius:6px;padding:.5rem .75rem;font-size:.9375rem;background:var(--panel)}
+.history-link:hover{text-decoration:none;background:var(--good-soft)}
+.source{font-size:.8125rem;line-height:1.6;color:var(--muted);margin-top:1.5rem;text-align:center;overflow-wrap:anywhere}.source a{color:var(--text)}
+.timestamp{font-size:.8125rem;color:var(--muted);text-align:center;margin-top:.5rem;overflow-wrap:anywhere}
+.loading{padding:1.25rem 1rem;color:var(--muted);font-size:.9375rem}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+:focus-visible{outline:2px solid var(--good);outline-offset:3px}
+@media(max-width:560px){
+ .page{padding:1.25rem 1rem}.header{gap:.75rem}h1{font-size:1.75rem}
+ .system-head{padding:.875rem}.group-row{padding:.75rem .875rem}
+ .row-head{display:grid;grid-template-columns:1.125rem minmax(0,1fr) auto;column-gap:.5rem;row-gap:.25rem}
+ .row-head .status-icon{grid-column:1;grid-row:1}.row-head .name{grid-column:2;grid-row:1}
+ .row-head .component-count{grid-column:2;grid-row:2;margin-left:0}
+ .row-head .uptime{grid-column:3;grid-row:1;margin-left:0;text-align:right}.children{padding-left:.75rem}
+ .banner.incident .banner-head{padding:.875rem .875rem .35rem}.incident-body{padding:0 .875rem .875rem 2.5rem}
+}
+@media(max-width:360px){.row-head{grid-template-columns:1.125rem minmax(0,1fr)}.row-head .uptime{grid-column:2;grid-row:3;text-align:left}.bars{gap:1px}}
+@media(prefers-reduced-motion:reduce){.bar{transition:none}}
+</style>
+</head>
+<body data-provider="kimi" data-official="https://status.moonshot.cn" data-operator="Moonshot AI">
+<main class="page">
+<!--
+Official-site brand artwork (embedded locally; no runtime logo requests):
+openai: https://developers.openai.com/
+claude: https://claude.com/
+gemini: https://www.gstatic.com/lamda/images/gemini_sparkle_aurora_33f86dc0c0257da337c63.svg
+deepseek: https://www.deepseek.com/
+kimi: https://statics.kimi.ai/moonshot-ai/assets/static/moonshot-ai-wordmark.DeMGOuiG.svg (published by https://www.moonshot.cn/)
+OpenAI: developer-site vector mark. Claude: symbol path from official wordmark.
+Gemini: original Google SVG, including its embedded raster artwork.
+DeepSeek: whale symbol from official header, with original clipping geometry.
+Kimi card: Moonshot AI corporate symbol selected by the user, extracted from the official wordmark.
+Only wrappers, local SVG IDs and static presentation attributes are normalized.
+Brand names and marks belong to their respective owners; their use does not imply endorsement.
+-->
+<header class="header"><div class="brand-heading"><span class="brand-mark" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" data-brand="kimi" focusable="false" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M28.8186 6.53439C26.7444 3.70476 23.7481 1.53777 20.1255 0.555313C16.5029 -0.427149 12.837 -0.0676099 9.64385 1.33292L28.8186 6.53439ZM2.80611 7.02702C4.22375 4.93598 6.09629 3.23513 8.24272 2.0311L22.3683 5.86339C21.4413 6.40479 20.4483 7.33778 19.6796 8.36344L31.294 11.5143C31.6236 12.6173 31.8383 13.7607 31.9285 14.9278L2.80611 7.02702ZM31.4282 20.3773C31.2644 20.9975 31.0669 21.5995 30.8384 22.1813L0.168318 13.861C0.257781 13.2409 0.384406 12.6201 0.548192 11.9999C0.933572 10.543 1.50338 9.18634 2.22597 7.94886L17.2345 12.0208C16.6337 12.8904 16.0866 13.8353 15.6049 14.8463L31.6917 19.2109C31.6181 19.6004 31.53 19.9892 31.4275 20.3787L31.4282 20.3773ZM0.928067 21.6162C0.184146 19.5071 -0.133105 17.2258 0.0513273 14.9076L14.2058 18.7476C14.1039 19.0737 14.0083 19.4039 13.9195 19.7391C13.7392 20.4212 13.5919 21.102 13.4777 21.7779L28.7621 25.9244C28.0506 26.8811 27.2399 27.7479 26.3501 28.513L0.928067 21.6162ZM11.8508 31.8213C7.02602 30.512 3.31123 27.1034 1.4091 22.8258L12.9272 25.9509C12.9086 27.0386 12.9753 28.0984 13.1219 29.115L21.4909 31.3851C18.5035 32.4972 15.1596 32.7187 11.8508 31.8213Z" fill="currentColor"/></svg></span><div class="brand-copy"><h1>Kimi</h1><p class="official-label">Official status data</p></div></div><div class="header-actions"><button id="refresh" class="refresh" title="Refresh official status" aria-label="Refresh official status"><svg viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5M6 6a8 8 0 0 1 13 2M18 18a8 8 0 0 1-13-2"/></svg></button><a class="subscribe" href="https://status.moonshot.cn" target="_blank" rel="noopener noreferrer" title="Subscribe on the official status page">Subscribe to updates</a></div></header>
+<section class="banner unknown" id="banner" aria-live="polite"><div class="banner-head" id="banner-head">Checking official status...</div><p class="banner-body" id="banner-body">Loading official current status and uptime history.</p></section>
+<section id="incidents" hidden aria-label="Active incidents" aria-live="polite"><div id="incident-list"></div></section>
+<div class="notice" id="notice" hidden role="status"></div>
+<section class="system"><div class="system-head"><h2 id="system-title">System status</h2><div class="period-nav"><a href="https://10y9y5wx5xh3.statuspage.io/history" target="_blank" rel="noopener noreferrer" aria-label="Browse earlier reporting periods on the official site" title="Earlier reporting periods on the official site"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></a><span class="period" id="period">Official reporting period</span><span class="period-next" title="Latest official snapshot" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg></span></div></div><p id="timeline-note" class="timeline-note" hidden>All tiers · 90 local calendar days ending on the snapshot date. Each day is green when no official issue was recorded; green is not measured uptime.</p><div id="rows"><p class="loading">Loading official system history...</p></div><div id="timeline-legend" class="timeline-legend" hidden><span class="legend-item"><span class="legend-swatch" aria-hidden="true"></span>No issues recorded (not measured uptime)</span><span class="legend-item"><span class="legend-swatch moderate" aria-hidden="true"></span>Moderate impact</span><span class="legend-item"><span class="legend-swatch major" aria-hidden="true"></span>Major impact</span></div></section>
+<p class="metrics-note" id="metrics-note" hidden></p>
+<section id="recent" hidden aria-label="Recent incidents"><h2>Recent incidents</h2><p class="recent-note" id="recent-note" hidden role="status"></p><div id="recent-list"></div></section>
+<div class="history-action"><a class="history-link" href="https://10y9y5wx5xh3.statuspage.io/history" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>View history</a></div>
+<p class="source">Official data from <a href="https://status.moonshot.cn" target="_blank" rel="noopener noreferrer">status.moonshot.cn</a>. Self-hosted display; not operated by Moonshot AI.<br>Uptime values and daily bars come from the official source, not estimates. Covers the services listed by Moonshot AI, including Kimi, Open API and Kimi Code; regional coverage is not specified.</p>
+<p class="timestamp" id="timestamp">Auto-refresh every 60 seconds.</p>
+<noscript>Enable JavaScript to load official status data.</noscript>
+</main>
+<script>
+'use strict';
+const provider = document.body.dataset.provider;
+const theme = new URLSearchParams(location.search).get('theme');
+document.documentElement.dataset.theme = ['dark','light'].includes(theme) ? theme : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+const labels = {operational:'Operational',degraded_performance:'Degraded Performance',partial_outage:'Partial Outage',major_outage:'Major Outage',under_maintenance:'Under Maintenance',unknown:'No data',resolved:'Resolved',investigating:'Investigating',identified:'Identified',monitoring:'Monitoring',mitigated:'Mitigated',official_history:'Official chart color'};
+const chartTiers = new Set(['1','2','3']);
+const byId = id => document.getElementById(id) || null;
+let previous = null, busy = false;
+function el(tag,className,text){const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node;}
+function date(value){const d=new Date(value);return value&&!Number.isNaN(d.getTime())?new Intl.DateTimeFormat('en-GB',{timeZone:'UTC',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).format(d)+' UTC':'Not provided';}
+function localDay(value){return new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'short',year:'numeric'}).format(value instanceof Date?value:new Date(value));}
+function localTime(value){return new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(value));}
+function tone(state){return state==='operational'?'good':['degraded_performance','under_maintenance'].includes(state)?'warn':['partial_outage','major_outage'].includes(state)?'bad':'unknown';}
+function icon(state){
+ const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 16 16');svg.setAttribute('class','status-icon '+tone(state));svg.setAttribute('data-state',state);svg.setAttribute('aria-hidden','true');
+ const shape=document.createElementNS(ns,['degraded_performance','under_maintenance'].includes(state)?'path':'circle');
+ if(shape.tagName.toLowerCase()==='path')shape.setAttribute('d','M7.1 1.6a1 1 0 0 1 1.8 0l6.3 11a1 1 0 0 1-.9 1.5H1.7a1 1 0 0 1-.9-1.5Z');
+ else{shape.setAttribute('cx','8');shape.setAttribute('cy','8');shape.setAttribute('r','8');}
+ shape.setAttribute('fill','currentColor');
+ const mark=document.createElementNS(ns,'path');mark.setAttribute('d',['operational','resolved'].includes(state)?'M4.5 8l2.3 2.4 4.7-5':tone(state)==='unknown'?'M6 5.7a2 2 0 1 1 3.1 1.7L8 8.3v.8M8 11v.2':'M8 5v4M8 11v.2');mark.setAttribute('stroke','#fff');mark.setAttribute('stroke-width','1.5');mark.setAttribute('stroke-linecap','round');mark.setAttribute('fill','none');svg.append(shape,mark);return svg;
+}
+function bars(row){
+ if(!row.days?.length)return el('p','history-missing','Official history is unavailable for this component.');
+ const track=el('div','bars');track.setAttribute('aria-label','Official daily status history for '+row.name);
+ row.days.forEach((day,index)=>{const state=Object.hasOwn(labels,day.state)?day.state:'unknown';const bar=el('span','bar '+state);bar.tabIndex=index===0?0:-1;if(typeof day.color==='string'&&/^#[0-9a-f]{6}$/i.test(day.color))bar.style.backgroundColor=day.color;const when=day.date||'Day '+(index+1)+' of '+row.days.length;bar.title=when+' — '+labels[state]+(day.events?.length?'\n'+day.events.join('\n'):'');bar.setAttribute('aria-label',bar.title);bar.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();const next=event.key==='ArrowRight'?bar.nextElementSibling:bar.previousElementSibling;if(next){bar.tabIndex=-1;next.tabIndex=0;next.focus();}}});track.append(bar);});return track;
+}
+function chartState(history){
+ if(provider!=='gemini'||!history?.available)return {kind:'none'};
+ // A missing or non-string kind cannot be trusted to be the official chart feed.
+ if(typeof history.snapshotKind!=='string'||!history.snapshotKind)return {kind:'unavailable'};
+ if(history.snapshotKind!=='official-incident-feed')return {kind:'none'};
+ const fetched=Date.parse(history.fetchedAt);
+ if(!Number.isFinite(fetched)||!Array.isArray(history.chartIncidents))return {kind:'unavailable'};
+ const anchor=new Date(fetched);anchor.setHours(0,0,0,0);
+ // A local midnight can be skipped by a DST jump, so re-normalize after the day shift.
+ const start=new Date(anchor);start.setDate(start.getDate()-89);start.setHours(0,0,0,0);
+ const events=[];
+ for(const item of history.chartIncidents){
+  if(!item||typeof item!=='object')return {kind:'unavailable'};
+  if(!['minor','major','critical'].includes(item.impact))return {kind:'unavailable'};
+  if(!Array.isArray(item.affectedComponents)||!item.affectedComponents.length||item.affectedComponents.some(name=>typeof name!=='string'||!name))return {kind:'unavailable'};
+  const from=Date.parse(item.startedAt);
+  if(!Number.isFinite(from)||from>fetched)return {kind:'unavailable'};
+  let to=fetched;
+  if(item.endedAt!==null){if(typeof item.endedAt!=='string')return {kind:'unavailable'};to=Date.parse(item.endedAt);if(!Number.isFinite(to)||to<from||to>fetched)return {kind:'unavailable'};}
+  events.push({...item,from,to});
+ }
+ // Every day is re-anchored to its own local day start so no day inherits another day's offset.
+ return {kind:'chart',start,anchor,fetched,events,day:index=>{const value=new Date(start);value.setDate(start.getDate()+index);value.setHours(0,0,0,0);return value;}};
+}
+function chartRow(row,chart,stale){
+ const items=chart.events.filter(item=>item.affectedComponents.includes(row.name)),track=el('div','incident-track');
+ track.setAttribute('aria-label','Official daily chart for '+row.name+': all tiers, local calendar days, not measured uptime');
+ const detail=el('p','day-detail','Select a day to read its official records. A green day has no recorded issue; it is not measured uptime.');detail.setAttribute('aria-live','polite');
+ for(let index=0;index<90;index++){
+  const day=chart.day(index),from=day.getTime(),close=new Date(day);close.setHours(23,59,59,999);const to=close.getTime();
+  const active=items.filter(item=>{const opened=Math.max(item.from,from),closed=Math.min(item.to,to);return opened<closed&&Math.round((closed-opened)/60000)>0;});
+  const severity=active.some(item=>item.impact==='major'||item.impact==='critical')?'major':active.length?'moderate':'none';
+  const cell=el('button',severity==='none'?'incident-day':'incident-day '+severity);cell.setAttribute('type','button');cell.tabIndex=index===0?0:-1;
+  const label=localDay(day);
+  const text=active.length?label+' — '+active.length+' official issue'+(active.length===1?'':'s')+':\n'+active.map(item=>(item.name||'Official issue')+' · '+(labels[item.status]||'Status not provided')+' · '+localTime(item.from)+' – '+(item.endedAt===null?'ongoing':localTime(item.to))).join('\n'):label+' — No issues recorded on this day. This is not a measured uptime probe.';
+  cell.title=text;cell.setAttribute('aria-label',text);
+  const select=()=>{for(const node of track.children)node.tabIndex=node===cell?0:-1;detail.textContent=text;};cell.addEventListener('click',select);cell.addEventListener('focus',select);
+  cell.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();const next=event.key==='ArrowRight'?cell.nextElementSibling:cell.previousElementSibling;if(next){cell.tabIndex=-1;next.tabIndex=0;next.focus();}}});track.append(cell);
+ }
+ const axis=el('div','timeline-axis');axis.append(el('span','','90 days'),el('span','',stale?'Snapshot day':'Today'));
+ return {track,axis,detail};
+}
+function rowNode(row,isChild=false,chart=null,chartStale=false){
+ const hasChildren=!isChild&&row.components?.length,node=el('div',isChild?'child-row':'group-row');
+ const head=el(hasChildren?'summary':'div','row-head');head.append(icon(row.status),el('span','name',row.name),el('span','sr-only',labels[row.status]||'Unknown'));
+ if(hasChildren)head.append(el('span','component-count',row.componentCount+' component'+(row.componentCount===1?'':'s')));
+ if(row.uptime!==null&&row.uptime!==undefined)head.append(el('span','uptime',row.uptime+'% uptime'));
+ if(hasChildren){const details=el('details'),children=el('div','children');for(const child of row.components)children.append(rowNode(child,true));details.append(head,children);node.append(details);}else node.append(head);
+ if(row.days?.length)node.append(bars(row));else if(chart){if(chartTiers.has(String(row.id))){const view=chartRow(row,chart,chartStale);node.append(view.track,view.axis,view.detail);}else node.append(el('p','history-missing','The official daily chart is not available for this tier.'));}return node;
+}
+function incidentCard(item,details,mode){
+ const impactStates={none:'unknown',minor:'degraded_performance',major:provider==='gemini'?'major_outage':'partial_outage',critical:'major_outage',maintenance:'under_maintenance'};
+ const resolved=mode==='recent'&&item.status==='resolved';
+ const state=resolved?'resolved':Object.hasOwn(impactStates,item.impact)?impactStates[item.impact]:details?.impact||'unknown';
+ const article=el('article','banner incident '+tone(state)+(resolved?' resolved':'')),head=el('div','banner-head'),title=el('h3','',item.name||details?.name||'Official incident');
+ head.append(icon(state),title);const content=el('div','incident-body');content.append(el('p','incident-description',item.body||details?.body||'No further incident details have been published.'));
+ const meta=[labels[item.status]||labels[details?.status]||'Status not provided'];
+ if(details?.durationText)meta.push(details.durationText);else if(item.updatedAt)meta.push('Updated '+date(item.updatedAt));
+ const affected=item.affectedComponents?.length?item.affectedComponents:details?.affectedComponents;
+ if(affected?.length)meta.push('Affects '+affected.join(', '));
+ content.append(el('p','incident-meta',meta.join(' · ')));if(item.originalLanguageNote)content.append(el('p','incident-meta',item.originalLanguageNote));article.append(head,content);return article;
+}
+function clearSecondary(){for(const id of ['timeline-note','timeline-legend']){const node=byId(id);if(node)node.hidden=true;}const title=byId('system-title');if(title)title.textContent='System status';const recent=byId('recent');if(recent)recent.hidden=true;const list=byId('recent-list');if(list)list.replaceChildren();const note=byId('recent-note');if(note)note.hidden=true;const metrics=byId('metrics-note');if(metrics)metrics.hidden=true;}
+function renderSecondary(data,history){
+ const metrics=byId('metrics-note');
+ if(metrics){const text=history?.available&&history.metricsNote?String(history.metricsNote):'';metrics.hidden=!text;metrics.textContent=text;}
+ const items=history?.available&&Array.isArray(history.recentIncidents)?history.recentIncidents:[];
+ const recent=byId('recent'),list=byId('recent-list');
+ if(recent)recent.hidden=!items.length;
+ if(list)list.replaceChildren(...items.map(item=>incidentCard(item,undefined,'recent')));
+ const note=byId('recent-note');
+ if(note){const stale=items.length&&(data.stale||history?.stale);note.hidden=!stale;note.textContent=stale?'Showing previously fetched official incidents. This list may be out of date.':'';}
+}
+function render(data){
+ if(!data.fetchedAt){byId('banner').hidden=false;byId('banner').className='banner unknown';byId('banner-head').textContent='Official status unavailable';byId('banner-body').textContent=data.error||'Please try again or visit the official status page.';byId('rows').replaceChildren(el('p','loading','No official history data is available.'));byId('period').textContent='History unavailable';byId('notice').hidden=true;byId('incidents').hidden=true;byId('incident-list').replaceChildren();clearSecondary();return;}
+ const history=data.history,details=history?.available&&!history.stale&&!data.stale?history.incidents||[]:[];
+ // Current summary incidents win. HTML incident snapshots are a fallback only when the summary omits its incident list.
+ const incidents=data.incidentsAvailable===false?details:(data.incidents||[]);
+ const indicatorStates={none:'operational',minor:'degraded_performance',major:provider==='gemini'?'major_outage':'partial_outage',critical:'major_outage',maintenance:'under_maintenance'};let state=Object.hasOwn(indicatorStates,data.status.indicator)?indicatorStates[data.status.indicator]:'unknown';
+ const officialOverall=history?.available&&!history.stale&&!data.stale?history.overall:null;
+ if(state==='operational'&&data.components.some(c=>c.status!=='operational'))state='degraded_performance';
+ if(state==='operational'&&incidents.length)state='degraded_performance';
+ const title=officialOverall?.status===state&&officialOverall.title?officialOverall.title:(data.status.description||'Service status is not confirmed');
+ byId('banner').hidden=!!incidents.length;byId('banner').className='banner '+tone(state);byId('banner-head').replaceChildren(icon(state),el('span','',title));
+ byId('banner-body').textContent=officialOverall?.status===state&&officialOverall.description?officialOverall.description:'This display shows the official status report; it is not an active probe of your account or channel.';
+ byId('incidents').hidden=!incidents.length;byId('incident-list').replaceChildren(...incidents.map(item=>incidentCard(item,details.find(detail=>detail.id===item.id))));
+ const chartView=chartState(history);
+ const messages=[];if(data.stale)messages.push((data.error||'Status refresh failed.')+' Data fetched: '+date(data.fetchedAt));if(history?.stale)messages.push(history.error+' History fetched: '+date(history.fetchedAt));if(!history?.available)messages.push(history?.error||'Official history is unavailable. No uptime data has been estimated.');if(chartView.kind==='unavailable')messages.push('The official daily chart data is missing or invalid, so no daily history is drawn.');if(data.incidentsAvailable===false)messages.push('The official summary did not include an incident list.');byId('notice').hidden=!messages.length;byId('notice').textContent=messages.join(' ');
+ const current=[...data.components,...(data.groups||[])];const sync=row=>{const latest=row.id?current.find(c=>c.id===row.id):current.find(c=>c.name===row.name);return {...row,status:latest?.status||(!data.stale&&history?.stale?'unknown':row.status),components:(row.components||[]).map(sync)};};
+ const rows=history?.available?history.rows.map(sync):data.components.map(c=>({...c,uptime:null,days:[],components:[]}));
+ const chart=chartView.kind==='chart'?chartView:null,chartStale=!!(history?.stale||data.stale);
+ const systemTitle=byId('system-title');if(systemTitle)systemTitle.textContent='System status';
+ const timelineNote=byId('timeline-note');if(timelineNote)timelineNote.hidden=!chart;
+ const timelineLegend=byId('timeline-legend');if(timelineLegend)timelineLegend.hidden=!chart;
+ byId('rows').replaceChildren(...rows.map(row=>rowNode(row,false,chart,chartStale)));byId('period').textContent=chart?localDay(chart.start)+' - '+localDay(chart.anchor)+' (local time)':chartView.kind==='unavailable'?'Daily history unavailable':history?.available?history.rangeLabel:'History unavailable';
+ const snapshot=history?.snapshotKind==='official-html'?'Official HTML snapshot: ':history?.snapshotKind==='official-incident-feed'?'Official incident feed: ':provider==='openai'?'Official HTML snapshot: ':'Official history snapshot: ';
+ byId('timestamp').textContent='Status fetched: '+date(data.fetchedAt)+(history?.available?' · '+snapshot+date(history.fetchedAt):'')+' · Refreshes every 60 seconds';
+ renderSecondary(data,history);
+}
+async function refresh(){
+ if(busy)return;busy=true;byId('refresh').disabled=true;
+ try{if(location.protocol==='file:')throw new Error('preview');const response=await fetch('/api/status/'+provider,{cache:'no-store',signal:AbortSignal.timeout(20000)});const data=await response.json();if(data.provider!==provider||(!response.ok&&!data.error))throw new Error('Invalid response');if(data.fetchedAt&&(!Array.isArray(data.components)||!Array.isArray(data.incidents)))throw new Error('Invalid schema');previous=data;render(data);}
+ catch{if(previous?.fetchedAt)render({...previous,stale:true,error:'Connection failed. Showing previously fetched official data.'});else render({error:location.protocol==='file:'?'Local preview only. Run the included service to load live official status and history.':'Unable to connect to the status service. Please try again.'});}
+ finally{busy=false;byId('refresh').disabled=false;}
+}
+byId('refresh').addEventListener('click',refresh);refresh();setInterval(()=>{if(!document.hidden)refresh();},60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh();});
+</script>
+</body>
+</html>

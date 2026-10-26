@@ -1,0 +1,7 @@
+services:
+  ai-status-embed:
+    image: ai-status-embed:local
+    pull_policy: never
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8099:8099"

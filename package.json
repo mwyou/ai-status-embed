@@ -1,0 +1,17 @@
+{
+  "name": "ai-status-embed",
+  "version": "1.6.9",
+  "private": true,
+  "type": "module",
+  "description": "Self-hosted OpenAI, Claude, Gemini, DeepSeek and Kimi official status viewer for iframe embedding",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test server.test.mjs pages.test.mjs gemini.test.mjs deepseek.test.mjs kimi.test.mjs providers.test.mjs"
+  },
+  "dependencies": {
+    "cheerio": "1.2.0"
+  }
+}
